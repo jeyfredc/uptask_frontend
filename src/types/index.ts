@@ -2,9 +2,10 @@ import { z } from 'zod'
 
 
 
-export const taskStatusSchema = z.enum(['pending',
+export const taskStatusSchema = z.enum([
+    'pending',
     'onHold',
-    'inPRogress',
+    'inProgress',
     'underReview',
     'completed'])
 /* Tasks */
