@@ -5,6 +5,7 @@ import {
   ForgotPasswordForm,
   NewPasswordForm,
   RequestConfirmationCodeForm,
+  User,
   UserLoginForm,
   UserRegistrationForm,
 } from "../types";
@@ -97,3 +98,19 @@ export async function updatePasswordWithToken({formData, token}: {formData: NewP
         }
     }
 }
+
+export async function getUser(){
+  try{
+
+      
+      const url = `auth/user`
+      const { data } = await api.get<User>(url)
+      
+      return data
+  }catch(error){
+      if(isAxiosError(error) && error.message){
+          throw new Error(error.response?.data.error)
+      }
+  }
+}
+

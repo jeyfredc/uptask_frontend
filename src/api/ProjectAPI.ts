@@ -21,6 +21,8 @@ export async function createProject(formData: ProjectFormData) {
 
 
 export async function getProjects() {
+
+    
     try {
         const { data } = await api.get('/projects')
 

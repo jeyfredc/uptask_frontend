@@ -15,6 +15,8 @@
       "@/lib/*": ["lib/*"],
       "@/utils/*": ["utils/*"],
       "@/locales/*": ["locales/*"],
+      "@/Logo/*": ["Logo/*"],
+      "@/hooks/*": ["hooks/*"],
 
     },
 
