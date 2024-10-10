@@ -8,9 +8,10 @@ import { deleteTask } from "@/api/TaskAPI";
 import { toast } from "react-toastify";
 type TaskCardProps = {
   task: Task;
+  canEdit: boolean;
 };
 
-export default function TaskCard({ task }: TaskCardProps) {
+export default function TaskCard({ task, canEdit }: TaskCardProps) {
   const navigate = useNavigate();
   
   const params = useParams()
@@ -70,6 +71,9 @@ export default function TaskCard({ task }: TaskCardProps) {
               >
                 Ver Tarea
               </MenuItem>
+
+              {canEdit &&
+              <>
               <MenuItem
                 as="button"
                 className="block px-3 py-1 text-sm leading-6 text-gray-900"
@@ -86,6 +90,8 @@ export default function TaskCard({ task }: TaskCardProps) {
               >
                 Eliminar Tarea
               </MenuItem>
+              </>
+}
             </MenuItems>
           </Transition>
         </Menu>

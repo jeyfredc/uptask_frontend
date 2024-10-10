@@ -27,9 +27,10 @@ export async function createTask({ formData, projectId }: Pick<TaskAPI, 'formDat
 export async function getTaskById({ projectId , taskId }: Pick<TaskAPI, | 'projectId' | 'taskId'>) {
     try {
 
-        const { data } = await api.get(`/projects/${projectId}/tasks/${taskId}`)
-        const response = taskSchema.safeParse(data)
-        return response.data
+        const { data } = await api.get<Task>(`/projects/${projectId}/tasks/${taskId}`)
+        return data
+/*         const response = taskSchema.safeParse(data)
+        return response.data */
     } catch (error) {
         if (isAxiosError(error) && error.response) {
             throw new Error(error.response.data.error)
