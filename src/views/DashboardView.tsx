@@ -7,12 +7,12 @@ import {
   Transition,
 } from "@headlessui/react";
 import { EllipsisVerticalIcon } from "@heroicons/react/20/solid";
-import { Link } from "react-router-dom";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteProjectById, getProjects } from "@/api/ProjectAPI";
-import { toast } from "react-toastify";
+import { Link, useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { getProjects } from "@/api/ProjectAPI";
 import { useAuth } from "@/hooks/useAuth";
 import { isManager } from "@/utils/policies";
+import DeleteProjectModal from "@/components/projects/DeleteProjectModal";
 
 export default function DashboardView() {
   const { data: user, isLoading: authLoading } = useAuth();
@@ -23,20 +23,7 @@ export default function DashboardView() {
     queryFn: getProjects,
   });
 
-  /* Forza un nuevo refetch para obtener datos actualizados */
-  const queryClient = useQueryClient();
-
-  /* useMutation modifica datos */
-  const { mutate } = useMutation({
-    mutationFn: deleteProjectById,
-    onError: (error) => {
-      toast.error(error.message);
-    },
-    onSuccess: (data) => {
-      toast.success(data);
-      queryClient.invalidateQueries({ queryKey: ["projects"] });
-    },
-  });
+  const navigate = useNavigate();
 
   if (isLoading && authLoading) return "...Cargando";
 
@@ -69,21 +56,27 @@ export default function DashboardView() {
               >
                 <div className="flex min-w-0 gap-x-4">
                   <div className="min-w-0 flex-auto space-y-2">
-                    {
-                      isManager(project.manager, user._id) ?
+                    {isManager(project.manager, user._id) ? (
                       <div>
-                        <p className="font-bold text-xs uppercase bg-indigo-50 text-indigo-500 border-2 border-indigo-500 rounded-lg
+                        <p
+                          className="font-bold text-xs uppercase bg-indigo-50 text-indigo-500 border-2 border-indigo-500 rounded-lg
                         inline-block py-1 px-5
-                        " >Manager</p>
+                        "
+                        >
+                          Manager
+                        </p>
                       </div>
-                      :
+                    ) : (
                       <div>
-                        <p className="font-bold text-xs uppercase bg-green-50 text-green-500 border-2 border-green-500 rounded-lg
+                        <p
+                          className="font-bold text-xs uppercase bg-green-50 text-green-500 border-2 border-green-500 rounded-lg
                         inline-block py-1 px-5
-                        " >Colaborador</p>
-
+                        "
+                        >
+                          Colaborador
+                        </p>
                       </div>
-                    }
+                    )}
                     <Link
                       to={`/projects/${project._id}`}
                       className="text-gray-600 cursor-pointer hover:underline text-3xl font-bold"
@@ -139,7 +132,12 @@ export default function DashboardView() {
                               <button
                                 type="button"
                                 className="block px-3 py-1 text-sm leading-6 text-red-500"
-                                onClick={() => mutate(project._id)}
+                                onClick={() =>
+                                  navigate(
+                                    location.pathname +
+                                      `?deleteProject=${project._id}`
+                                  )
+                                }
                               >
                                 Eliminar Proyecto
                               </button>
@@ -165,6 +163,7 @@ export default function DashboardView() {
             </Link>
           </p>
         )}
+        <DeleteProjectModal />
       </>
     );
 }

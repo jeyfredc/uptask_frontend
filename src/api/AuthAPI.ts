@@ -1,6 +1,7 @@
 import api from "@/lib/axios";
 import { isAxiosError } from "axios";
 import {
+  CheckPasswordForm,
   ConfirmToken,
   ForgotPasswordForm,
   NewPasswordForm,
@@ -85,32 +86,46 @@ export async function validateToken(formData: ConfirmToken) {
   }
 }
 
-export async function updatePasswordWithToken({formData, token}: {formData: NewPasswordForm, token: ConfirmToken}){
-    try{
-        console.log(token);
-        
-        const url = `auth/update-password/${token.token}`
-        const { data } = await api.post<string>(url, formData)
-        return data
-    }catch(error){
-        if(isAxiosError(error) && error.message){
-            throw new Error(error.response?.data.error)
-        }
+export async function updatePasswordWithToken({ formData, token }: { formData: NewPasswordForm, token: ConfirmToken }) {
+  try {
+    console.log(token);
+
+    const url = `auth/update-password/${token.token}`
+    const { data } = await api.post<string>(url, formData)
+    return data
+  } catch (error) {
+    if (isAxiosError(error) && error.message) {
+      throw new Error(error.response?.data.error)
     }
-}
-
-export async function getUser(){
-  try{
-
-      
-      const url = `auth/user`
-      const { data } = await api.get<User>(url)
-      
-      return data
-  }catch(error){
-      if(isAxiosError(error) && error.message){
-          throw new Error(error.response?.data.error)
-      }
   }
 }
 
+export async function getUser() {
+  try {
+
+
+    const url = `auth/user`
+    const { data } = await api.get<User>(url)
+
+    return data
+  } catch (error) {
+    if (isAxiosError(error) && error.message) {
+      throw new Error(error.response?.data.error)
+    }
+  }
+}
+
+export async function checkPassword(formData: CheckPasswordForm) {
+  try {
+
+
+    const url = `auth/check-password`
+    const { data } = await api.post<string>(url, formData)
+
+    return data
+  } catch (error) {
+    if (isAxiosError(error) && error.message) {
+      throw new Error(error.response?.data.error)
+    }
+  }
+}
